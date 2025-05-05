@@ -1,0 +1,46 @@
+{% extends "index_template.html" %}
+
+{% block content %}
+<div class="container row justify-content-center">
+    <div class="col-md-8">
+        <br><br><br>
+        <div class="row mt-3">
+            <div class="text-center col-md-4">
+                <img src="https://marketplace.canva.com/EAFaQMYuZbo/1/0/1003w/canva-brown-rusty-mystery-novel-book-cover-hG1QhA7BiBU.jpg" style="max-height: 600px; box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5); border-radius: 2%;" class="img-fluid" alt="Book Cover">
+            </div>
+            <div class="col-md-8">
+                <h2 class="mb-3">{{ catalog.title }}</h2>
+                <p class="mb-4">by {{ person.first_name }} {{ person.last_name }}</p>
+                {% if catalog.abstract %}
+                <div class="mb-4">
+                    <p>Abstract</p>
+                    <p class="text-justify">{{ catalog.abstract }}</p>
+                </div>
+                <hr>
+                {% endif %}
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <p class="font-weight-bold">Editors</p>
+                        <p>{{ person.first_name }} {{ person.last_name }}</p>
+                    </div <div class="col-md-4">
+                        <p class="font-weight-bold">Published</p>
+                        <p>{{ catalog.publish_year }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="font-weight-bold">ISBN</p>
+                        {% if catalog.isbn %}
+                        <div class="mb-4">
+                            <p>{{ catalog.isbn }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary">Kembali</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

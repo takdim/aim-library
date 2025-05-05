@@ -1,0 +1,87 @@
+{% extends "index_template.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <form class="d-flex" action="{{ url_for('search') }}" method="GET">
+                <input class="form-control me-2" type="search" name="query" 
+                       placeholder="Cari judul, nama, atau ISBN" 
+                       value="{{ query }}" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Cari</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h4 class="mb-4">Hasil Pencarian untuk "{{ query }}" ({{ result_count }} hasil)</h4>
+            
+            {% if results %}
+                <div class="list-group mb-4">
+                    {% for catalog, person in results %}
+                        <a href="{{ url_for('show_detail_collection', catalog_id=catalog.id) }}" 
+                           class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ catalog.title }}</h5>
+                                <small class="text-muted">{{ catalog.publish_year }}</small>
+                            </div>
+                            <p class="mb-1">Penulis: {{ person.first_name }} {{ person.last_name }}</p>
+                            {% if catalog.isbn %}
+                                <small class="text-muted">ISBN/NIM: {{ catalog.isbn }}</small>
+                            {% endif %}
+                        </a>
+                    {% endfor %}
+                </div>
+
+                {# Pagination Navigation #}
+                {% if pagination.pages > 1 %}
+                <nav aria-label="Search results pages">
+                    <ul class="pagination justify-content-center">
+                        {# Previous page button #}
+                        <li class="page-item {% if pagination.page == 1 %}disabled{% endif %}">
+                            <a class="page-link" 
+                               href="{{ url_for('search', query=query, page=pagination.prev_num) if pagination.has_prev else '#' }}"
+                               tabindex="-1" {% if pagination.page == 1 %}aria-disabled="true"{% endif %}>
+                                Previous
+                            </a>
+                        </li>
+
+                        {# Page numbers #}
+                        {% for page_num in pagination.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
+                            {% if page_num %}
+                                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('search', query=query, page=page_num) }}">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {# Next page button #}
+                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                            <a class="page-link" 
+                               href="{{ url_for('search', query=query, page=pagination.next_num) if pagination.has_next else '#' }}">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info">
+                    Tidak ditemukan hasil untuk pencarian Anda.
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Kembali ke Beranda</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

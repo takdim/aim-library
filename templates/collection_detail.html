@@ -1,0 +1,149 @@
+{% extends "dashboard_s_student_template.html" %}
+
+{% block content %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
+
+    <div class="max-w-screen-xl mx-auto p-4">
+        <!-- Detail Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">Detail Koleksi</h1>
+            
+            <div class="grid grid-cols-1 gap-4">
+                <div class="border-b pb-2">
+                    <span class="font-semibold text-gray-700">Judul:</span>
+                    <span class="ml-2">{{ catalog.title }}</span>
+                </div>
+                
+                <div class="border-b pb-2">
+                    <span class="font-semibold text-gray-700">Penulis:</span>
+                    <span class="ml-2">{{ person.first_name }} {{ person.last_name }}</span>
+                </div>
+                
+                <div class="border-b pb-2">
+                    <span class="font-semibold text-gray-700">ISBN:</span>
+                    <span class="ml-2">{{ catalog.isbn }}</span>
+                </div>
+                
+                <div class="border-b pb-2">
+                    <span class="font-semibold text-gray-700">Call Number:</span>
+                    <span class="ml-2">{{ catalog.call_no }}</span>
+                </div>
+                
+                <div class="mt-4">
+                    <button id="viewPdfBtn" data-pdf-url="/view_pdf/{{ person.student.person_id }}"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-block">
+                        Lihat Dokumen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF Viewer Section -->
+        <div id="pdfViewer" class="hidden">
+            <div class="bg-white p-6 rounded-lg shadow-md relative">
+                <!-- Overlay untuk mencegah interaksi langsung dengan PDF -->
+                <div id="pdfOverlay" class="absolute top-0 left-0 w-full h-full z-10" style="pointer-events: none;"></div>
+                
+                <div class="relative" style="width: 100%; height: 100vh; min-height: 500px;">
+                    <iframe 
+                        id="pdfFrame" 
+                        class="w-full h-full"
+                        style="border: 1px solid #ccc;"
+                        frameborder="0"
+                        oncontextmenu="return false;"
+                        allowfullscreen="false">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewButton = document.getElementById('viewPdfBtn');
+            const pdfViewer = document.getElementById('pdfViewer');
+            const pdfFrame = document.getElementById('pdfFrame');
+            const pdfOverlay = document.getElementById('pdfOverlay');
+
+            // Ubah dari link menjadi button dengan data attribute
+            viewButton.addEventListener('click', function(e) {
+                const pdfUrl = this.getAttribute('data-pdf-url') + '#toolbar=0&view=FitH&navpanes=0&scrollbar=0';
+                pdfFrame.src = pdfUrl;
+                pdfViewer.classList.remove('hidden');
+                pdfViewer.scrollIntoView({ behavior: 'smooth' });
+                
+                // Aktifkan overlay untuk mencegah interaksi langsung
+                pdfOverlay.style.pointerEvents = 'auto';
+            });
+
+            // Mencegah klik kanan pada iframe PDF
+            pdfFrame.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Mencegah klik kanan pada overlay
+            pdfOverlay.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // Mencegah klik kanan pada container PDF
+            pdfViewer.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // Mencegah klik kanan di seluruh halaman
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // Blokir shortcut keyboard untuk Print & Save
+            document.addEventListener('keydown', function(e) {
+                // Cek Ctrl+P, Ctrl+S, Command+P, Command+S
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 's' || e.keyCode === 80 || e.keyCode === 83)) {
+                    e.preventDefault();
+                    alert("Operasi ini tidak diizinkan!");
+                    return false;
+                }
+
+                // Cek PrintScreen
+                if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                    e.preventDefault();
+                    alert("Screenshot tidak diizinkan!");
+                    return false;
+                }
+            });
+
+            // Tambahan: mencegah drag and drop file PDF
+            pdfFrame.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // Tambahan: mencegah copy-paste dari PDF
+            document.addEventListener('copy', function(e) {
+                if (pdfViewer.classList.contains('hidden') === false) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Mencoba untuk mencegah akses pada PDF dalam iframe
+            pdfFrame.addEventListener('load', function() {
+                try {
+                    const frameDoc = pdfFrame.contentDocument || pdfFrame.contentWindow.document;
+                    frameDoc.addEventListener('contextmenu', function(e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                } catch (e) {
+                    console.log("Same-origin policy restricts access to iframe content");
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
