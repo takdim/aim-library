@@ -1,0 +1,84 @@
+{% extends "dashboard_student_template.html" %}
+  {% block content %}
+  <div class="container-fluid">
+    <h1>Formulir Pendaftaran</h1>
+
+    <form id="formulir" method="POST" enctype="multipart/form-data" >
+      {% if status_catalog is none %}
+      <div class="mb-3">
+        <label for="nama" class="form-label">Nama</label>
+        <input type="text" class="form-control" id="nama" name="nama" value="{{ nama_default }}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="nim" class="form-label">NIM</label>
+        <input type="text" class="form-control" id="nim" name="nim" value="{{ nim_default }}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="judul_penelitian" class="form-label">Judul Penelitian</label>
+        <input type="text" class="form-control" id="judul_penelitian" name="judul_penelitian" required>
+      </div>
+      <div class="mb-3">
+        <label for="abstrak">Abstrak</label>
+        <textarea class="form-control" id="abstract" name="abstract"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="prodi" class="form-label">Prodi</label>
+        <select class="form-select" id="prodi" name="prodi" required>
+          <option value="S1-Hukum Pidana">S1-Hukum Pidana</option>
+          <option value="S1-Hukum Perdata">S1-Hukum Perdata</option>
+          <option value="S1-Hukum Tata Negara">S1-Hukum Tata Negara</option>
+          <option value="S1-Hukum Administrasi Negara">S1-Hukum Administrasi Negara</option>
+          <option value="S2-Ilmu Hukum">S2-Ilmu Hukum</option>
+          <option value="S2-Kenotariatan">S2-Kenotariatan</option>
+          <option value="S3-Ilmu Hukum">S3-Ilmu Hukum</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="pdf_file" class="form-label">Unggah File PDF</label>
+        <input type="file" class="form-control" id="pdf_file" name="pdf_file" accept=".pdf">
+      </div>
+      <button id="submitBtn" type="submit" class="btn btn-primary">Submit</button>
+      {% else %}
+      <div class="mb-3">
+        <label for="nama" class="form-label">Nama</label>
+        <input type="text" class="form-control" id="nama" name="nama" value="{{ nama_default }}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="nim" class="form-label">NIM</label>
+        <input type="text" class="form-control" id="nim" name="nim" value="{{ nim_default }}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="judul_penelitian" class="form-label">Judul Penelitian</label>
+        <input type="text" class="form-control" id="judul_penelitian" name="judul_penelitian" value="{{ catalog_title }}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="abstrak">Abstrak</label>
+        <textarea class="form-control" id="abstract" name="abstract" readonly> {{ abstract }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label for="prodi" class="form-label">Program Studi</label>
+        <input type="text" class="form-control" id="prodi" name="prodi" value="{{ subject_name }}" readonly>
+      </div>
+
+        {% if reject_status == True %}
+        <div class="mb-3">
+          <label for="pdf_file" class="form-label">Unggah File PDF</label>
+          <input type="file" class="form-control" id="pdf_file" name="pdf_file" accept=".pdf">
+        </div>
+        <button id="submitBtn" type="submit" class="btn btn-primary">Submit</button>
+        {% else %}
+        <div class="mb-3">
+          <label for="pdf_file" class="form-label">Unggah File PDF</label>
+          <!-- <input type="file" class="form-control" id="pdf_file" name="pdf_file" accept=".pdf" readonly> -->
+        </div>
+        <a href="/file" class="btn btn-primary btn-sm">Lihat File</a>
+        {% endif %}
+        <br><br>
+      
+      {% endif %}
+
+    </form>
+
+  </div>
+  {% endblock %}

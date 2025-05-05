@@ -1,0 +1,67 @@
+{% extends "dashboard_s_admin_template.html" %}
+
+{% block content %}
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Super Admin Dashboard</h1>
+        </div>
+
+        <!-- Dashboard Summary Cards -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-dashboard">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users dashboard-icon"></i>
+                        <h5 class="card-title">Manajemen User</h5>
+                        <p class="card-text">Kelola akun pengguna: tambah, edit, dan hapus user.</p>
+                        <a href="{{ url_for('manage_users') }}" class="btn btn-primary">Akses</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-dashboard">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-shield dashboard-icon"></i>
+                        <h5 class="card-title">Manajemen Role</h5>
+                        <p class="card-text">Kelola role dan hak akses pengguna sistem.</p>
+                        <a href="#" class="btn btn-primary">Akses</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-dashboard">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-bar dashboard-icon"></i>
+                        <h5 class="card-title">Laporan Sistem</h5>
+                        <p class="card-text">Lihat statistik dan laporan aktivitas sistem.</p>
+                        <a href="#" class="btn btn-primary">Akses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card card-dashboard">
+                    <div class="card-body text-center">
+                        <i class="fas fa-database dashboard-icon"></i>
+                        <h5 class="card-title">Backup Database</h5>
+                        <p class="card-text">Kelola backup dan restore database sistem.</p>
+                        <a href="#" class="btn btn-primary">Akses</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-dashboard">
+                    <div class="card-body text-center">
+                        <i class="fas fa-cogs dashboard-icon"></i>
+                        <h5 class="card-title">Konfigurasi Sistem</h5>
+                        <p class="card-text">Kelola pengaturan dan konfigurasi sistem.</p>
+                        <a href="#" class="btn btn-primary">Akses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

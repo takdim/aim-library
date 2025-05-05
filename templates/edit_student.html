@@ -1,0 +1,149 @@
+{% extends "dashboard_admin_template.html" %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+<div class="container mt-4">
+    <h2>Edit Student</h2>
+    <form method="POST" enctype="application/x-www-form-urlencoded">
+        <div class="form-group">
+            <label for="first_name">First Name:</label>
+            <input type="text" name="first_name" class="form-control" value="{{ student.person.first_name }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="last_name">Last Name:</label>
+            <input type="text" name="last_name" class="form-control" value="{{ student.person.last_name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select name="status" class="form-control" required>
+                <option value="0" {% if catalog and catalog.status == 0 %}selected{% endif %}>Inactive</option>
+                <option value="1" {% if catalog and catalog.status == 1 %}selected{% endif %}>Accept</option>
+            </select>
+        </div>
+
+        <!-- Reject Checkbox -->
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="reject" name="reject" value="reject" 
+            {% if catalog and catalog.reject_status %}checked{% endif %}>
+            <label class="form-check-label" for="reject">Reject</label>
+        </div>
+
+        <!-- Additional Checkboxes -->
+        <div id="additional-checkboxes" style="display: {% if catalog and catalog.reject_status %}block{% else %}none{% endif %};">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="sampul" name="checked_items[]" value="sampul" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('sampul') %}checked{% endif %}>
+                <label class="form-check-label" for="sampul">Sampul</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="halaman_judul" name="checked_items[]" value="halaman_judul" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('halaman_judul') %}checked{% endif %}>
+                <label class="form-check-label" for="halaman_judul">Halaman Judul</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="lembar_pengesahan" name="checked_items[]" value="lembar_pengesahan" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('lembar_pengesahan') %}checked{% endif %}>
+                <label class="form-check-label" for="lembar_pengesahan">Lembar Pengesahan dengan Tanda Tangan dan Stempel Basah</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="pernyataan_keaslian" name="checked_items[]" value="pernyataan_keaslian" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('pernyataan_keaslian') %}checked{% endif %}>
+                <label class="form-check-label" for="pernyataan_keaslian">Pernyataan Keaslian beserta Materai</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="kata_pengantar" name="checked_items[]" value="kata_pengantar" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('kata_pengantar') %}checked{% endif %}>
+                <label class="form-check-label" for="kata_pengantar">Kata Pengantar / Daftar Isi</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="abstrak" name="checked_items[]" value="abstrak" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('abstrak') %}checked{% endif %}>
+                <label class="form-check-label" for="abstrak">Abstrak</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="bab_1_4" name="checked_items[]" value="bab_1_4" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('bab_1_4') %}checked{% endif %}>
+                <label class="form-check-label" for="bab_1_4">Bab 1/4</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="daftar_pustaka" name="checked_items[]" value="daftar_pustaka" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('daftar_pustaka') %}checked{% endif %}>
+                <label class="form-check-label" for="daftar_pustaka">Daftar Pustaka</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input checked-item" id="lampiran" name="checked_items[]" value="lampiran" 
+                       {% if catalog and catalog.checked_items and catalog.checked_items.get('lampiran') %}checked{% endif %}>
+                <label class="form-check-label" for="lampiran">Lampiran</label>
+            </div>
+        </div>
+
+        <!-- Description Section -->
+        <div id="description-section" style="display: {% if catalog and catalog.reject_status %}block{% else %}none{% endif %};">
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <div id="editor">{{ catalog.description|safe if catalog else '' }}</div>
+                <input type="hidden" name="description" id="description">
+            </div>
+        </div>
+
+        <!-- Hidden Inputs for JSON Data -->
+        <input type="hidden" name="reject_status" id="reject_status">
+        <input type="hidden" name="checked_items" id="checked_items">
+
+        <button type="submit" class="btn btn-success">Update</button>
+    </form>
+
+    <div class="mt-4">
+        <h4>Files:</h4>
+        <a href="{{ url_for('student_files', student_id=student.person_id) }}" class="btn btn-primary btn-sm">Lihat File</a>
+    </div>
+</div>
+
+<script>
+    // Initialize Quill editor
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline'],
+                [{'list': 'ordered'}, {'list': 'bullet'}],
+                [{'indent': '-1'}, {'indent': '+1'}],
+                ['link', 'image']
+            ]
+        }
+    });
+
+    // Handle form submission
+    document.querySelector('form').addEventListener('submit', function() {
+        // Save Quill editor content to hidden input
+        var plainText = quill.getText(); // Extract text without HTML tags
+        document.querySelector('#description').value = plainText.trim();
+
+        // Set reject_status based on checkbox state
+        document.querySelector('#reject_status').value = document.getElementById('reject').checked ? '1' : '0';
+
+        // Gather checked items into a JSON object
+        var checkedItems = {};
+        document.querySelectorAll('#additional-checkboxes input[type="checkbox"]').forEach(function(checkbox) {
+            checkedItems[checkbox.value] = checkbox.checked;
+        });
+
+        // Save checked items to hidden input as JSON
+        document.querySelector('#checked_items').value = JSON.stringify(checkedItems);
+    });
+
+    // Toggle visibility of additional checkboxes and description section based on Reject checkbox state
+    document.getElementById('reject').addEventListener('change', function() {
+        var additionalCheckboxes = document.getElementById('additional-checkboxes');
+        var descriptionSection = document.getElementById('description-section');
+        var displayStyle = this.checked ? 'block' : 'none';
+        additionalCheckboxes.style.display = displayStyle;
+        descriptionSection.style.display = displayStyle;
+    });
+</script>
+{% endblock %}

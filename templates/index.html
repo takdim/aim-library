@@ -1,0 +1,95 @@
+{% extends "index_template.html" %}
+
+{% block content %}
+  <br><br><br>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form class="d-flex justify-content-center" action="{{ url_for('search') }}" method="GET">
+          <input class="form-control me-2" type="search" name="query" 
+                 placeholder="Cari judul, nama, atau ISBN" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Cari</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <br><br>
+
+
+  <!-- Carousel Subject -->
+  <div class="container">
+    <div id="subjectCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        {% for subject in subjects %}
+        <button type="button" data-bs-target="#subjectCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+          {% if loop.first %}class="active" aria-current="true"{% endif %} 
+          aria-label="Slide {{ loop.index }}">
+        </button>
+        {% endfor %}
+      </div>
+
+      <div class="carousel-inner">
+        {% set image_urls = [
+          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ'
+        ] %}
+        {% for subject in subjects %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+          <a href="{{ url_for('search', query=subject.name) }}"><img src="{{ image_urls[loop.index0] }}" class="d-block w-100 rounded" alt="Carousel Image {{ loop.index + 1 }}"></a>
+          <!-- <img src="https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ" class="d-block w-100" alt="{{ subject.name }}"> -->
+          <div class="carousel-caption d-none d-md-block">
+            <h5>{{ subject.name }}</h5>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#subjectCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#subjectCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+
+  <br><br>
+
+  <!-- Latest Collections Section -->
+  <div class="container">
+    <h3 class="mb-4">Koleksi Terbaru</h3>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for catalog, person in latest_catalogs %}
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="https://marketplace.canva.com/EAFaQMYuZbo/1/0/1003w/canva-brown-rusty-mystery-novel-book-cover-hG1QhA7BiBU.jpg" style="max-height: 180px;" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ catalog.title }}</h5>
+              <p class="card-text">Oleh: {{ person.first_name }} {{ person.last_name }}</p>
+              <p class="card-text"><small class="text-body-secondary">Tahun: {{ catalog.publish_year }}</small></p>
+              <a href="{{ url_for('show_detail_collection', catalog_id=catalog.id) }}" 
+                class="btn btn-sm btn-outline-primary">
+                Detail
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <br><br>
+{% endblock %}

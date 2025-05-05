@@ -1,0 +1,72 @@
+{% extends "dashboard_student_template.html" %}
+{% block content %}
+<br><br><br>
+<div class="container">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-between">
+            <!-- Card Formulir -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Formulir</h5>
+                        <a class="text-decoration-none" href="/formulir_collection">
+                            <p class="card-text">Input Formulir Berkas</p>
+                        </a>
+                    </div>
+                </div>
+    
+                <!-- Card Download -->
+                <div class="card mt-3">            
+                    <div class="card-body">
+                        <h5 class="card-title">Download</h5>
+                        <p class="card-text">Download Surat Penyetoran Koleksi</p>
+                        {% if status_catalog == 1 %}
+                            <a class="btn btn-success" href="/download" role="button">Download</a>
+                        {% else %}
+                            <a class="btn btn-success disabled" role="button" aria-disabled="true">Download</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Card Status Berkas -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Status Berkas</h5>
+                        {% if status_catalog == 0 %}
+                            {% if reject_status %}
+                                <p class="card-text text-danger">Berkas Anda ditolak. Silakan perbaiki item berikut:</p>
+                                <ul class="list-group">
+                                    {% for item in item_list %}
+                                        <li class="list-group-item">
+                                            {% if checked_items[item.key] %}
+                                                <span style="color: red;">&#10060;</span> <!-- Simbol silang -->
+                                            {% else %}
+                                                <span style="color: green;">&#10003;</span> <!-- Simbol centang -->
+                                            {% endif %}
+                                            {{ item.label }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="card-text">
+                                    <h6 class="mt-3">Keterangan:</h6>
+                                    <p>{{ description }}</p> <!-- Menampilkan deskripsi jika ada -->
+                                </div>
+                                <p class="card-text">Silakan perbaiki berkas dan unggah kembali.</p>
+                            {% else %}
+                                <p class="card-text">Usulan sedang di proses oleh staff</p>
+                            {% endif %}
+                        {% elif status_catalog == 1 %}
+                            <p class="card-text text-success">Dokumen Telah di Verifikasi, Silahkan Download</p>
+                        {% else %}
+                            <p class="card-text">Status berkas tidak diketahui.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

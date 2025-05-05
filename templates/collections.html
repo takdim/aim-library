@@ -1,0 +1,110 @@
+{% extends "dashboard_s_student_template.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Search Form -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Search Collections</h3>
+                    <form method="GET" action="{{ url_for('collections') }}" id="searchForm">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="query" id="searchInput" 
+                                   placeholder="Search by title, author name, or ISBN..." 
+                                   value="{{ query }}" autocomplete="off"
+                                   required minlength="3">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search Results - Only shown if there was a search -->
+            {% if query %}
+                <!-- Results count -->
+                <div class="mt-4">
+                    {% if total_results > 0 %}
+                        <h5 class="mb-3">Found {{ total_results }} result(s) for "{{ query }}"</h5>
+                        
+                        <!-- Results list -->
+                        {% for catalog, person in results %}
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ catalog.title }}</h5>
+                                    <p class="card-text">
+                                        <strong>Author:</strong> {{ person.first_name }} {{ person.last_name }}<br>
+                                        <strong>ISBN:</strong> {{ catalog.isbn }}<br>
+                                        <strong>Year:</strong> {{ catalog.publish_year }}
+                                    </p>
+                                    <a href="{{ url_for('collection_detail', catalog_id=catalog.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <!-- Pagination - Only show if there are multiple pages -->
+                        {% if pagination and pagination.pages > 1 %}
+                            <nav aria-label="Page navigation" class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    {% if pagination.has_prev %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('collections', query=query, page=pagination.prev_num) }}">Previous</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for page_num in pagination.iter_pages(left_edge=2, left_current=2, right_current=2, right_edge=2) %}
+                                        {% if page_num %}
+                                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                                <a class="page-link" href="{{ url_for('collections', query=query, page=page_num) }}">{{ page_num }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if pagination.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('collections', query=query, page=pagination.next_num) }}">Next</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-info">
+                            No results found for "{{ query }}"
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+    
+    // Add loading state to form submission
+    searchForm.addEventListener('submit', function(e) {
+        if (searchInput.value.length < 3) {
+            e.preventDefault();
+            alert('Please enter at least 3 characters');
+            return;
+        }
+        
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Searching...';
+        submitButton.disabled = true;
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

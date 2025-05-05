@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi PDF</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+        }
+        .container {
+            margin: 50px auto;
+            width: 80%;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        .info h2 {
+            margin-bottom: 10px;
+        }
+        .info p {
+            margin: 5px 0;
+        }
+        hr {
+            background-color:rgb(255, 255, 255);
+            margin:0 0 45px 0;
+            border-width:0;
+        }
+        hr.s1 {
+            height:5px;
+            border-top:1px solid black;
+            border-bottom:2px solid black;
+        }
+        th{
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <br>
+        <br>
+        <div class="kop-surat">
+            <table>
+                <tr>
+                  <th>
+                    <img src="https://drive.google.com/thumbnail?id=1kW9SwSs8RQjgQca9NKHSmBPFCIF1bG5i" alt="Logo" style="width: 70px; height: auto;">
+                  </th>
+                  <th>
+                    <p style="font-size: 12pt; text-align: center;">
+                            KEMENTRIAN PENDIDIKAN, KEBUDAYAAN 
+                        <br> RISET, DAN TEKNOLOGI 
+                        <br> UNIVERSITAS HASANUDDIN 
+                        <br> FAKULTAS HUKUM 
+                        <br> UNIVERSITAS HASANUDDIN
+                        <br> KAMPUS UNHAS TAMALANREA JALAN PERINTIS KEMERDEKAAN
+                        <br> TELEPON (0411) 587219, 584000, 584686, FAX (0411) 587219, 590846 MAKASSAR 90245
+                    </p>
+                    <p style="font-size: 9pt; margin-top: -10pt;">E-mail: hukumunhas@unhas.ac.id, Website: http://lawfaculty.unhas.ac.id</p>
+                  </th>
+                </tr>
+              </table>
+              
+            <hr class="s1">
+        </div>
+        <div class="no-surat">
+            <center>
+                <strong>
+                    <p>TANDA TERIMA KARYA ILMIAH</p>
+                    <p>No. {{ nomor }} RB-FH/XIII/2024</p>
+                </strong>
+            </center>
+        </div>
+        <div class="info">
+            <p>Yang bertanda tangan dibawah ini, menerangkan bahwa:</p>
+            <br>
+            <table>
+                <tr>
+                  <td>Nama</td>
+                  <td> : </td>
+                  <td>{{ nama }}</td>
+                </tr>
+                <tr>
+                  <td>NIM</td>
+                  <td> : </td>
+                  <td>{{ nim }}</td>
+                </tr>
+                <tr>
+                  <td>Departemen</td>
+                  <td> : </td>
+                  <td>{{ subject_name }}</td>
+                </tr>
+              </table>
+            <br>
+            <p>Telah melakukan penelitian di Ruang Baca Fakultas Hukum UNHAS, sehubungan dengan penyelesaian karya ilmiah yang berjudul:</p>
+            <p><strong> {{ title }} </strong></p>
+        </div>
+        <div class="penutup-surat" style="text-align: right;">
+            <p style="margin-top: -5pt;">Demikian keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya.</p>
+            <p>Makassar, {{ tanggal }}</p>
+            <p>Pustakawan</p>
+            <img src="https://drive.google.com/thumbnail?id=1MqiTpZEE2uXg1bvJUjzk2lM3VCEfwXHN" alt="TTD" style="width: 200px; height: auto;">
+            <p>Nurhidayah, S. Hum., M. M.</p>
+            <p>Nip. 196508061990032009</p>
+
+        </div>
+        <!-- Tambahkan elemen lain jika diperlukan -->
+    </div>
+</body>
+</html>
