@@ -1118,6 +1118,7 @@ def formulir_collection():
                 
                 # Create new file object
                 new_file_obj = File(pdf_file, file_type)
+                db.session.add(new_file_obj)
                 new_file_obj.user = user
 
                 # Get current year
