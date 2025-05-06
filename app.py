@@ -1135,13 +1135,13 @@ def formulir_collection():
                 # Get subject
                 subject = Subject.query.filter_by(name=prodi).first()
                 if not subject:
-                    flash('Prodi tidak ditemukan.')
+                    print('Prodi tidak ditemukan.')
                     return redirect(url_for('formulir_collection'))
 
                 # Get publisher
                 publisher = Publisher.query.get(1)  # Assuming this is Universitas Hasanuddin
                 if not publisher:
-                    flash('Publisher tidak ditemukan.')
+                    print('Publisher tidak ditemukan.')
                     return redirect(url_for('formulir_collection'))
 
                 # Generate call_no
