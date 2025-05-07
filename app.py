@@ -850,7 +850,7 @@ def edit_student(student_id):
                 #     if catalog.file:
                 #         catalog.file.delete_file()
                 #         catalog.file = None
-
+                catalog.is_opac = 0
                 catalog.reject_status = new_reject_status
 
                 # Handle checked items only if status is not Active
