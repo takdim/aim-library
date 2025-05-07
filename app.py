@@ -9,6 +9,8 @@ import os
 import uuid
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import aliased
+from sqlalchemy import desc
 from flask import send_from_directory
 from flask import make_response
 from werkzeug.utils import secure_filename
@@ -447,29 +449,33 @@ def dashboard():
                 page = request.args.get('page', 1, type=int)
                 per_page = 10  # Number of items per page
 
-                # Query to get only students who have submitted catalogs with pagination
-                # students_query = (
-                #     Student.query
-                #     .join(Person)
-                #     .join(Author, Person.id == Author.person_id)
-                #     .join(Author.collections)
-                #     .order_by(Catalog.id.desc())
-                #     .distinct()
-                # )
-                students_query_base = (
-                    Student.query
-                    .join(Person)
+                # Aliased agar bisa referensikan catalog
+                catalog_alias = aliased(Catalog)
+
+                # Subquery yang memilih student dan catalog.id untuk ORDER BY
+                subquery = (
+                    db.session.query(
+                        Student.person_id.label('person_id'),
+                        catalog_alias.id.label('catalog_id')
+                    )
+                    .join(Person, Student.person_id == Person.id)
                     .join(Author, Person.id == Author.person_id)
-                    .join(Author.collections)
+                    .join(catalog_authors, Author.person_id == catalog_authors.c.author_id)
+                    .join(catalog_alias, catalog_alias.id == catalog_authors.c.catalog_id)
+                    .distinct()
+                    .subquery()
                 )
 
-                # Get total count
-                # total_students = students_query.count()
-                total_students = students_query_base.distinct().count()
+                # Gabungkan kembali dengan Student agar bisa ambil data lengkap
+                students_query = (
+                    db.session.query(Student)
+                    .join(subquery, Student.person_id == subquery.c.person_id)
+                    .order_by(desc(subquery.c.catalog_id))
+                )
 
-                # Apply pagination
-                # paginated_students = students_query.paginate(page=page, per_page=per_page, error_out=False)
-                paginated_students = students_query_base.order_by(Catalog.id.desc()).distinct().paginate(page=page, per_page=per_page, error_out=False)
+                total_students = students_query.count()
+                paginated_students = students_query.paginate(page=page, per_page=per_page, error_out=False)
+
                 return render_template('dashboard_admin.html', 
                                     students=paginated_students.items,
                                     pagination=paginated_students,
