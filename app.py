@@ -285,6 +285,8 @@ def index():
         Author, catalog_authors.c.author_id == Author.person_id
     ).join(
         Person, Author.person_id == Person.id
+    ).filter(
+        Catalog.is_opac == 1  # Tambahkan filter ini
     ).order_by(
         Catalog.id.desc()
     ).limit(6).all()
@@ -446,21 +448,28 @@ def dashboard():
                 per_page = 10  # Number of items per page
 
                 # Query to get only students who have submitted catalogs with pagination
-                students_query = (
+                # students_query = (
+                #     Student.query
+                #     .join(Person)
+                #     .join(Author, Person.id == Author.person_id)
+                #     .join(Author.collections)
+                #     .order_by(Catalog.id.desc())
+                #     .distinct()
+                # )
+                students_query_base = (
                     Student.query
                     .join(Person)
                     .join(Author, Person.id == Author.person_id)
                     .join(Author.collections)
-                    .order_by(Catalog.id.desc())
-                    .distinct()
                 )
 
                 # Get total count
-                total_students = students_query.count()
+                # total_students = students_query.count()
+                total_students = students_query_base.distinct().count()
 
                 # Apply pagination
-                paginated_students = students_query.paginate(page=page, per_page=per_page, error_out=False)
-
+                # paginated_students = students_query.paginate(page=page, per_page=per_page, error_out=False)
+                paginated_students = students_query_base.order_by(Catalog.id.desc()).distinct().paginate(page=page, per_page=per_page, error_out=False)
                 return render_template('dashboard_admin.html', 
                                     students=paginated_students.items,
                                     pagination=paginated_students,
