@@ -31,18 +31,18 @@
 
       <div class="carousel-inner">
         {% set image_urls = [
+          url_for('static', filename='images/administrasi_negara_carousel.png'),
+          url_for('static', filename='images/hukum_internasional_carousel.png'),
           'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
-          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
-          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
-          'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+          url_for('static', filename='images/pidana_carousel.png'),
           'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
           'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
           'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
           'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ'
         ] %}
         {% for subject in subjects %}
-        <div class="carousel-item {% if loop.first %}active{% endif %}">
-          <a href="{{ url_for('search', query=subject.name) }}"><img src="{{ image_urls[loop.index0] }}" class="d-block w-100 rounded" alt="Carousel Image {{ loop.index + 1 }}"></a>
+        <div class="carousel-item {% if loop.first %}active{% endif %} ">
+          <a href="{{ url_for('search', query=subject.name) }}"><img src="{{ image_urls[loop.index0] }}" class="d-block w-100 rounded-3" style="height: 500px; object-fit: cover;" alt="Carousel Image {{ loop.index + 1 }}"></a>
           <!-- <img src="https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ" class="d-block w-100" alt="{{ subject.name }}"> -->
           <div class="carousel-caption d-none d-md-block">
             <h5>{{ subject.name }}</h5>
@@ -69,27 +69,27 @@
   <div class="container">
     <h3 class="mb-4">Koleksi Terbaru</h3>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-      {% for catalog, person in latest_catalogs %}
-      <div class="card mb-3" style="max-width: 540px;">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="https://marketplace.canva.com/EAFaQMYuZbo/1/0/1003w/canva-brown-rusty-mystery-novel-book-cover-hG1QhA7BiBU.jpg" style="max-height: 180px;" class="img-fluid rounded-start" alt="...">
+        {% for catalog, person in latest_catalogs %}
+        <div class="col"> 
+          <div class="card h-100 p-0" style="box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5); border-radius: 2%;">
+            <div class="row g-0 h-100"> <div class="col-md-4">
+            <img src="{{ url_for('static', filename='images/hukum_pidana_cover.jpg') }}"
+                class="img-fluid rounded-start h-100 object-fit-cover" alt="...">
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title">{{ catalog.title }}</h5>
-              <p class="card-text">Oleh: {{ person.first_name }} {{ person.last_name }}</p>
-              <p class="card-text"><small class="text-body-secondary">Tahun: {{ catalog.publish_year }}</small></p>
-              <a href="{{ url_for('show_detail_collection', catalog_id=catalog.id) }}" 
-                class="btn btn-sm btn-outline-primary">
-                Detail
-              </a>
+                <h5 class="card-title">{{ catalog.title }}</h5>
+                <p class="card-text">Oleh: {{ person.first_name }} {{ person.last_name }}</p>
+                <p class="card-text"><small class="text-body-secondary">Tahun: {{ catalog.publish_year }}</small></p>
+                <a href="{{ url_for('show_detail_collection', catalog_id=catalog.id) }}"class="btn btn-sm btn-outline-primary">Detail</a>
+            </div>
+          </div>
             </div>
           </div>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
     </div>
-  </div>
+</div>
+<br><br>
   <br><br>
 {% endblock %}

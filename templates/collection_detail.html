@@ -1,149 +1,127 @@
 {% extends "dashboard_s_student_template.html" %}
 
 {% block content %}
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
 
-    <div class="max-w-screen-xl mx-auto p-4">
-        <!-- Detail Section -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 mb-4">Detail Koleksi</h1>
-            
-            <div class="grid grid-cols-1 gap-4">
-                <div class="border-b pb-2">
-                    <span class="font-semibold text-gray-700">Judul:</span>
-                    <span class="ml-2">{{ catalog.title }}</span>
-                </div>
-                
-                <div class="border-b pb-2">
-                    <span class="font-semibold text-gray-700">Penulis:</span>
-                    <span class="ml-2">{{ person.first_name }} {{ person.last_name }}</span>
-                </div>
-                
-                <div class="border-b pb-2">
-                    <span class="font-semibold text-gray-700">ISBN:</span>
-                    <span class="ml-2">{{ catalog.isbn }}</span>
-                </div>
-                
-                <div class="border-b pb-2">
-                    <span class="font-semibold text-gray-700">Call Number:</span>
-                    <span class="ml-2">{{ catalog.call_no }}</span>
-                </div>
-                
-                <div class="mt-4">
-                    <button id="viewPdfBtn" data-pdf-url="/view_pdf/{{ person.student.person_id }}"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-block">
-                        Lihat Dokumen
-                    </button>
-                </div>
+<div class="max-w-screen-xl mx-auto p-4">
+    <!-- Detail Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-4">Detail Koleksi</h1>
+        
+        <div class="grid grid-cols-1 gap-4">
+            <div class="border-b pb-2">
+                <span class="font-semibold text-gray-700">Judul:</span>
+                <span class="ml-2">{{ catalog.title }}</span>
             </div>
-        </div>
-
-        <!-- PDF Viewer Section -->
-        <div id="pdfViewer" class="hidden">
-            <div class="bg-white p-6 rounded-lg shadow-md relative">
-                <!-- Overlay untuk mencegah interaksi langsung dengan PDF -->
-                <div id="pdfOverlay" class="absolute top-0 left-0 w-full h-full z-10" style="pointer-events: none;"></div>
-                
-                <div class="relative" style="width: 100%; height: 100vh; min-height: 500px;">
-                    <iframe 
-                        id="pdfFrame" 
-                        class="w-full h-full"
-                        style="border: 1px solid #ccc;"
-                        frameborder="0"
-                        oncontextmenu="return false;"
-                        allowfullscreen="false">
-                    </iframe>
-                </div>
+            
+            <div class="border-b pb-2">
+                <span class="font-semibold text-gray-700">Penulis:</span>
+                <span class="ml-2">{{ person.first_name }} {{ person.last_name }}</span>
+            </div>
+            
+            <div class="border-b pb-2">
+                <span class="font-semibold text-gray-700">ISBN:</span>
+                <span class="ml-2">{{ catalog.isbn }}</span>
+            </div>
+            
+            <div class="border-b pb-2">
+                <span class="font-semibold text-gray-700">Call Number:</span>
+                <span class="ml-2">{{ catalog.call_no }}</span>
+            </div>
+            
+            <div class="mt-4">
+                <button id="viewPdfBtn" data-pdf-url="/view_pdf/{{ person.student.person_id }}"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-block">
+                    Lihat Dokumen
+                </button>
             </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewButton = document.getElementById('viewPdfBtn');
-            const pdfViewer = document.getElementById('pdfViewer');
-            const pdfFrame = document.getElementById('pdfFrame');
-            const pdfOverlay = document.getElementById('pdfOverlay');
+    <!-- PDF Viewer Section -->
+    <div id="pdfViewer" class="hidden">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="overflow-auto border border-gray-300 rounded-lg p-2 max-h-[90vh]">
+                <div id="pdfContainer" class="space-y-6"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            // Ubah dari link menjadi button dengan data attribute
-            viewButton.addEventListener('click', function(e) {
-                const pdfUrl = this.getAttribute('data-pdf-url') + '#toolbar=0&view=FitH&navpanes=0&scrollbar=0';
-                pdfFrame.src = pdfUrl;
-                pdfViewer.classList.remove('hidden');
-                pdfViewer.scrollIntoView({ behavior: 'smooth' });
-                
-                // Aktifkan overlay untuk mencegah interaksi langsung
-                pdfOverlay.style.pointerEvents = 'auto';
-            });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const viewButton = document.getElementById('viewPdfBtn');
+        const pdfViewer = document.getElementById('pdfViewer');
+        const pdfContainer = document.getElementById('pdfContainer');
 
-            // Mencegah klik kanan pada iframe PDF
-            pdfFrame.addEventListener('contextmenu', function(e) {
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        document.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 's')) {
                 e.preventDefault();
+                alert("Operasi ini tidak diizinkan!");
                 return false;
-            });
-            
-            // Mencegah klik kanan pada overlay
-            pdfOverlay.addEventListener('contextmenu', function(e) {
+            }
+            if (e.key === 'PrintScreen' || e.keyCode === 44) {
                 e.preventDefault();
+                alert("Screenshot tidak diizinkan!");
                 return false;
-            });
-
-            // Mencegah klik kanan pada container PDF
-            pdfViewer.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
-
-            // Mencegah klik kanan di seluruh halaman
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
-
-            // Blokir shortcut keyboard untuk Print & Save
-            document.addEventListener('keydown', function(e) {
-                // Cek Ctrl+P, Ctrl+S, Command+P, Command+S
-                if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 's' || e.keyCode === 80 || e.keyCode === 83)) {
-                    e.preventDefault();
-                    alert("Operasi ini tidak diizinkan!");
-                    return false;
-                }
-
-                // Cek PrintScreen
-                if (e.key === 'PrintScreen' || e.keyCode === 44) {
-                    e.preventDefault();
-                    alert("Screenshot tidak diizinkan!");
-                    return false;
-                }
-            });
-
-            // Tambahan: mencegah drag and drop file PDF
-            pdfFrame.addEventListener('dragstart', function(e) {
-                e.preventDefault();
-                return false;
-            });
-
-            // Tambahan: mencegah copy-paste dari PDF
-            document.addEventListener('copy', function(e) {
-                if (pdfViewer.classList.contains('hidden') === false) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-
-            // Mencoba untuk mencegah akses pada PDF dalam iframe
-            pdfFrame.addEventListener('load', function() {
-                try {
-                    const frameDoc = pdfFrame.contentDocument || pdfFrame.contentWindow.document;
-                    frameDoc.addEventListener('contextmenu', function(e) {
-                        e.preventDefault();
-                        return false;
-                    });
-                } catch (e) {
-                    console.log("Same-origin policy restricts access to iframe content");
-                }
-            });
+            }
         });
-    </script>
 
+        viewButton.addEventListener('click', function () {
+            const url = this.getAttribute('data-pdf-url');
+            pdfViewer.classList.remove('hidden');
+            pdfContainer.innerHTML = '';
+
+            pdfjsLib.getDocument(url).promise.then(function (pdfDoc) {
+                for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                    const pageWrapper = document.createElement('div');
+                    pageWrapper.classList.add('pdf-page-wrapper');
+                    pageWrapper.dataset.pageNumber = pageNum;
+
+                    const placeholder = document.createElement('div');
+                    placeholder.textContent = `Memuat halaman ${pageNum}...`;
+                    placeholder.className = "text-gray-500 text-center";
+                    pageWrapper.appendChild(placeholder);
+
+                    pdfContainer.appendChild(pageWrapper);
+                }
+
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const wrapper = entry.target;
+                            const pageNumber = parseInt(wrapper.dataset.pageNumber);
+                            if (!wrapper.dataset.loaded) {
+                                pdfDoc.getPage(pageNumber).then(function (page) {
+                                    const viewport = page.getViewport({ scale: 1.3 });
+                                    const canvas = document.createElement('canvas');
+                                    const context = canvas.getContext('2d');
+                                    canvas.height = viewport.height;
+                                    canvas.width = viewport.width;
+
+                                    page.render({ canvasContext: context, viewport: viewport }).promise.then(() => {
+                                        wrapper.innerHTML = '';
+                                        wrapper.appendChild(canvas);
+                                        wrapper.dataset.loaded = true;
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }, {
+                    root: document.querySelector('.overflow-auto'),
+                    rootMargin: '100px',
+                    threshold: 0.1
+                });
+
+                document.querySelectorAll('.pdf-page-wrapper').forEach(page => observer.observe(page));
+            });
+
+            pdfViewer.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
 {% endblock %}
