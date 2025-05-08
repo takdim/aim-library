@@ -5,13 +5,17 @@
     <div class="container-fluid">
         <div class="row d-flex justify-content-between">
             <!-- Card Formulir -->
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Formulir</h5>
+                        <h5 class="card-title">Form Formulir</h5>
                         <a class="text-decoration-none" href="/formulir_collection">
                             <p class="card-text">Input Formulir Berkas</p>
                         </a>
+                        <img src="{{ url_for('static', filename='images/logout.png') }}" 
+                            alt="Form Icon" 
+                            class="position-absolute top-50 end-0 translate-middle-y me-3" 
+                            style="width: 40px;">
                     </div>
                 </div>
     
@@ -25,6 +29,10 @@
                         {% else %}
                             <a class="btn btn-success disabled" role="button" aria-disabled="true">Download</a>
                         {% endif %}
+                        <img src="{{ url_for('static', filename='images/downloads.png') }}" 
+                            alt="Form Icon" 
+                            class="position-absolute top-50 end-0 translate-middle-y me-3" 
+                            style="width: 40px;">
                     </div>
                 </div>
             </div>
@@ -59,6 +67,10 @@
                             {% endif %}
                         {% elif status_catalog == 1 %}
                             <p class="card-text text-success">Dokumen Telah di Verifikasi, Silahkan Download</p>
+                            <img src="{{ url_for('static', filename='images/check-mark.png') }}" 
+                            alt="Form Icon" 
+                            class="position-absolute top-50 end-0 translate-middle-y me-3" 
+                            style="width: 40px;">
                         {% else %}
                             <p class="card-text">Status berkas tidak diketahui.</p>
                         {% endif %}

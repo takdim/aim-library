@@ -465,7 +465,7 @@ def dashboard():
                     .distinct()
                     .subquery()
                 )
-
+                
                 # Gabungkan kembali dengan Student agar bisa ambil data lengkap
                 students_query = (
                     db.session.query(Student)
@@ -1100,6 +1100,7 @@ def formulir_collection():
     
     # Set default values
     nama_default = f"{person.first_name} {person.last_name if person.last_name else ''}"
+    name = person.first_name + ' ' + person.last_name
     nim_default = student.nim if student else ''
     status_catalog = None
     catalog_title = None
@@ -1231,7 +1232,8 @@ def formulir_collection():
         catalog_title=catalog_title,
         subject_name=subject_name,
         abstract=abstract,
-        reject_status=reject_status
+        reject_status=reject_status,
+        name=name
     )
 
 

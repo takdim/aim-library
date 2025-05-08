@@ -10,16 +10,20 @@
 <body>
 
   <nav class="navbar navbar-expand-lg bg-danger">
-    <div class="container-fluid">
+    <div class="container">
         <a class="navbar-brand text-white" href="/dashboard">Navbar</a>
         <div class="d-flex">
-            <div class="dropdown">
+            <a href="/logout" class="text-white d-inline-flex align-items-center text-decoration-none text-primary gap-2">
+                <img src="{{ url_for('static', filename='images/logout.png') }}" alt="Logout Icon" style="width: 20px; height: 20px; object-fit: contain; filter: invert(100%);">
+                <span>Logout</span>
+              </a>  
+            <!-- <div class="dropdown">
                 <a class="dropdown-toggle text-white text-decoration-none" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" href="#">{{ name }}</a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#">Profile</a></li>
                     <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 </ul>
-            </div>
+            </div> -->
         </div>
     </div>
 </nav>
