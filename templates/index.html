@@ -66,36 +66,47 @@
   <br><br>
 
   <!-- Latest Collections Section -->
-  <div class="container">
+
+  <div class="container mt-5">
+    {% set image_urls = {
+      'S1-Hukum Administrasi Negara': url_for('static', filename='images/administrasi_negara_carousel.png'),
+      'S1-Hukum Internasional': url_for('static', filename='images/hukum_internasional_carousel.png'),
+      'S1-Hukum Perdata': 'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+      'S1-Hukum Pidana': url_for('static', filename='images/pidana_carousel.png'),
+      'S1-Hukum Tata Negara': 'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+      'S2-Ilmu Hukum': 'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+      'S2-Kenotariatan': 'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ',
+      'S3-Ilmu Hukum': 'https://fastly.picsum.photos/id/1014/1200/400.jpg?hmac=4CsEiVhAaxel9-60QFxomgz--CPrAaSnySvgg02j2EQ'
+    } %}
+    
     <h3 class="mb-4">Koleksi Terbaru</h3>
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        {% for catalog, person in latest_catalogs %}
-        <div class="col"> 
-          <!-- <div class="card h-100 p-0" style="box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5); border-radius: 2%;">
-            <div class="row g-0 h-100"> <div class="col-md-4">
-            <img src="{{ url_for('static', filename='images/hukum_pidana_cover.jpg') }}"
-                class="img-fluid rounded-start h-auto object-fit-cover"  alt="...">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">{{ catalog.title }}</h5>
-                <p class="card-text">Oleh: {{ person.first_name }} {{ person.last_name }}</p>
-                <p class="card-text"><small class="text-body-secondary">Tahun: {{ catalog.publish_year }}</small></p>
-                <a href="{{ url_for('show_detail_collection', catalog_id=catalog.id) }}"class="btn btn-sm btn-outline-primary">Detail</a>
-            </div>
-          </div>
-            </div>
-          </div> -->
+    <p class="mb-3">Merupakan daftar koleksi-koleksi terbaru kami. Tidak semuanya baru, ada pula koleksi yang data-datanya sudah diperbaiki. Selamat menikmati!</p>
+    
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      {% for catalog, person in latest_catalogs %}
+      <div class="col">
+        <a href="{{ url_for('show_detail_collection', catalog_id=catalog.id) }}" class="text-decoration-none text-dark">
           <div class="card h-100 shadow-sm">
-            <img src="{{ url_for('static', filename='images/hukum_pidana_cover.jpg') }}" class="card-img-top" alt="Hukum laut Indonesia 2005" style=" object-fit: contain;">
-            <div class="card-body text-center">
-                <h6 class="card-title">{{ catalog.title }}</h6>
+            {% set subject_name = catalog.subject.name %}
+            {% set image_url = image_urls.get(subject_name, 'https://via.placeholder.com/300x200.png?text=No+Image') %}
+            <img src="{{ image_url }}"
+                 class="card-img-top"
+                 alt="{{ catalog.title | default('Judul Buku') }}"
+                 style="height: 300px; object-fit: cover;">
+            <div class="card-body d-flex flex-column justify-content-between align-items-center text-center">
+              <h6 class="card-title mb-0">{{ catalog.title }}</h6>
+              <p class="card-text small text-muted mb-1">Oleh: {{ person.first_name }} {{ person.last_name }}</p>
+              <p class="card-text small text-muted mb-1">Tahun: {{ catalog.publish_year }}</p>
+              <span class="stretched-link"></span>
             </div>
-        </div>
-        </div>
-        {% endfor %}
+          </div>
+        </a>
+      </div>
+      {% endfor %}
     </div>
-</div>
+  </div>
+  
+
 <br><br>
   <br><br>
 {% endblock %}
