@@ -68,13 +68,13 @@
   <!-- Latest Collections Section -->
   <div class="container">
     <h3 class="mb-4">Koleksi Terbaru</h3>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-4 g-4">
         {% for catalog, person in latest_catalogs %}
         <div class="col"> 
-          <div class="card h-100 p-0" style="box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5); border-radius: 2%;">
+          <!-- <div class="card h-100 p-0" style="box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5); border-radius: 2%;">
             <div class="row g-0 h-100"> <div class="col-md-4">
             <img src="{{ url_for('static', filename='images/hukum_pidana_cover.jpg') }}"
-                class="img-fluid rounded-start h-100 object-fit-cover" alt="...">
+                class="img-fluid rounded-start h-auto object-fit-cover"  alt="...">
           </div>
           <div class="col-md-8">
             <div class="card-body">
@@ -85,7 +85,13 @@
             </div>
           </div>
             </div>
-          </div>
+          </div> -->
+          <div class="card h-100 shadow-sm">
+            <img src="{{ url_for('static', filename='images/hukum_pidana_cover.jpg') }}" class="card-img-top" alt="Hukum laut Indonesia 2005" style=" object-fit: contain;">
+            <div class="card-body text-center">
+                <h6 class="card-title">{{ catalog.title }}</h6>
+            </div>
+        </div>
         </div>
         {% endfor %}
     </div>
